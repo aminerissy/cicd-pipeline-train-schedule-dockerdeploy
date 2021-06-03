@@ -1,6 +1,7 @@
 pipeline {
     agent any
     stages {
+        // CI build (building and testing if the app is ok)
         stage('Build') {
             steps {
                 echo 'Running build automation'
@@ -8,7 +9,7 @@ pipeline {
                 archiveArtifacts artifacts: 'dist/trainSchedule.zip'
             }
         }
-
+        // packaging the image in a docker image
         stage('Build Docker Image') {
             when {
                 branch 'master'
@@ -22,7 +23,7 @@ pipeline {
                 }
             }
         }
-
+        // push it to cocker hub
         stage('Push Docker Image') {
             when {
                 branch 'master'
@@ -36,7 +37,7 @@ pipeline {
                 }
             }
         }
-
+        // pull the image and run an instance of it
         stage('DeployToProduction') {
             when {
                 branch 'master'
